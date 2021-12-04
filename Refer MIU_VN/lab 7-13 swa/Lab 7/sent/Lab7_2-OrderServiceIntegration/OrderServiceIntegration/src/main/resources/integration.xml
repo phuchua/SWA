@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/integration"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:beans="http://www.springframework.org/schema/beans"
+        xmlns:int-http="http://www.springframework.org/schema/integration/http"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/integration/http 
+        http://www.springframework.org/schema/integration/http/spring-integration-http.xsd
+        http://www.springframework.org/schema/integration
+        http://www.springframework.org/schema/integration/spring-integration.xsd">
+
+
+  <channel id="newOrder"/>
+  <channel id="processOrderSuccess"/>
+  <channel id="processOrderFail"/>
+  <channel id="payment"/>
+  <channel id="supplier"/>
+  <channel id="paymentSuccess"/>
+  <channel id="paymentFail"/>
+  <channel id="shippingDHL"/>
+  <channel id="shippingFedEx"/>
+  
+
+  <router method="route" input-channel="paymentSuccess">
+    <beans:bean class="integration.service.ShippingRouter" />
+  </router>
+
+  <filter input-channel="newOrder" 
+			output-channel="processOrderSuccess"
+			ref="orderfilter"
+			method="checkTotalPrice"
+			discard-channel="processOrderFail"/>
+			
+  <service-activator input-channel="processOrderSuccess"
+					 ref="orderService" 
+					 method="handle" />
+
+  <service-activator input-channel="processOrderFail"
+					 ref="orderService" 
+					 method="handleFail" />	
+					 
+  <router method="route" input-channel="processOrderSuccess">
+		<beans:bean class="integration.service.StockRouter" />
+  </router>				 
+
+  <service-activator input-channel="supplier"                    
+                     ref="supplierService"
+                     method="print"/>
+                     
+  <service-activator input-channel="stock"                    
+                     ref="stockService"
+                     method="printStock"/>                   
+
+  <service-activator input-channel="payment"                    
+                     ref="paymentService"
+                     method="printPayment"/> 
+                     
+  <router method="route" input-channel="payment">
+		<beans:bean class="integration.service.PaymentRouter" />
+  </router>		                     
+
+  <service-activator input-channel="paymentFail"                    
+                     ref="paymentService"
+                     method="printPaymentFail"/>
+
+  <router method="route" input-channel="paymentSuccess">
+		<beans:bean class="integration.service.ShippingRouter" />
+  </router>		   
+
+  <service-activator input-channel="shippingFedEx"
+                     ref="shippingServiceFedEx"
+                     method="printOrder"/>
+
+  <service-activator input-channel="shippingDHL"
+                     ref="shippingServiceDHL"
+                     method="printOrder"/>
+
+  <beans:bean id="orderfilter" class="integration.service.AmountFilter"/>
+  <beans:bean id="orderService" class="integration.service.OrderService"/>
+  <beans:bean id="stockService" class="integration.service.StockService"/>
+  <beans:bean id="paymentService" class="integration.service.PaymentService"/>
+  <beans:bean id="supplierService" class="integration.service.SupplierService"/>
+  <beans:bean id="shippingServiceFedEx" class="integration.service.ShippingServiceFedEx"/>
+  <beans:bean id="shippingServiceDHL" class="integration.service.ShippingServiceDHL"/>
+  
+</beans:beans>

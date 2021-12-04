@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/EurekaServer/EurekaServer.iml" filepath="$PROJECT_DIR$/EurekaServer/EurekaServer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/Lab7.iml" filepath="$PROJECT_DIR$/.idea/Lab7.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ProductServiceWithEureka/ProductService.iml" filepath="$PROJECT_DIR$/ProductServiceWithEureka/ProductService.iml" />
+      <module fileurl="file://$PROJECT_DIR$/StockServiceWithEureka/StockService.iml" filepath="$PROJECT_DIR$/StockServiceWithEureka/StockService.iml" />
+    </modules>
+  </component>
+</project>

@@ -1,0 +1,7 @@
+There is a difference between the internal classes of a component and the tables in the database.
+
+In slide 46 (lesson 5) you see that every component should at least have its own private tables. The most important aspects of good components is loose coupling. We also saw that a class can be an entity in one component (lets say A) and the same class can be a value object in another component(lets say B). This means that component A has a table for this class, and component B has also a table for this component.
+
+The advantage of this is loose coupling. If you don't do this, you might as well not use components at all. The price you pay is duplication. But most of the time is the table of one component different than the table of the other component. It often has different columns. 
+
+The main point here is that loose coupling is far more important than data duplication. Remember that every advantage has also its disadvantage(s). We have to make a tradeoff, and we choose loose coupling above duplication.
